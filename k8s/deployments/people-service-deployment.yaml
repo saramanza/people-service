@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: people-service
+  labels:
+    app: people-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: people-service
+  template:
+    metadata:
+      labels:
+        app: people-service
+    spec:
+      containers:
+      - name: people-service
+        image: iad.ocir.io/gse00013828/oracleimc/people-rest-service:1.0
+        env:
+         - name: MYSQL_ROOT_PASSWORD
+           valueFrom:   
+            secretKeyRef:
+               name: mysql-pass
+               key: password
+        ports:
+        - containerPort: 8080
+          name: people-service
+      imagePullSecrets:
+       - name: ocirsecret     
